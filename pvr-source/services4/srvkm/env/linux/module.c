@@ -85,6 +85,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
 
+#ifdef CONFIG_OF
+#include <linux/of.h>
+#endif
+
 #if defined(SUPPORT_DRI_DRM)
 #include <drm/drmP.h>
 #if defined(PVR_SECURE_DRM_AUTH_EXPORT)
@@ -267,10 +271,21 @@ static struct platform_device_id powervr_id_table[] __devinitdata = {
 };
 #endif
 
+#ifdef CONFIG_OF
+static const struct of_device_id omap_gpu_id_table[] = {
+        { .compatible = "ti,omap4-gpu" },
+        {}
+};
+MODULE_DEVICE_TABLE(of, omap_gpu_id_table);
+#endif
+
 static LDM_DRV powervr_driver = {
 #if defined(PVR_LDM_PLATFORM_MODULE)
 	.driver = {
 		.name		= DRVNAME,
+#ifdef CONFIG_OF
+		.of_match_table = of_match_ptr(omap_gpu_id_table),
+#endif
 	},
 #endif
 #if defined(PVR_LDM_PCI_MODULE)
