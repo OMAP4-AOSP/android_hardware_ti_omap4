@@ -510,7 +510,7 @@ int sgxfreq_init(struct device *dev)
 		return ret;
 	}
 
-	sfd.gpu_hyd_clk = devm_clk_get(dev, "gpu_core_gclk_mux");
+	sfd.gpu_hyd_clk = devm_clk_get(dev, "gpu_hyd_gclk_mux");
 	if (IS_ERR(sfd.gpu_hyd_clk)) {
 		ret = PTR_ERR(sfd.gpu_hyd_clk);
 		pr_err("sgxfreq: failed to get gpu hyd clock: %d\n", ret);
