@@ -27,3 +27,4 @@ PRODUCT_COPY_FILES += \
     $(OMAP4_NEXT_FOLDER)/rootdir/init.omap4.rc:root/init.omap4.rc
 
 $(call inherit-product, hardware/ti/omap4/common.mk)
+$(call inherit-product-if-exists, vendor/ti/omap4/omap4-vendor.mk)
