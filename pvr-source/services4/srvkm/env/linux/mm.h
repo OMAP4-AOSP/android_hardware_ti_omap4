@@ -57,6 +57,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <asm/io.h>
 
+#ifndef VM_RESERVED
+#define VM_RESERVED (VM_DONTEXPAND | VM_DONTDUMP)
+#endif
+
 #define	PHYS_TO_PFN(phys) ((phys) >> PAGE_SHIFT)
 #define PFN_TO_PHYS(pfn) ((pfn) << PAGE_SHIFT)
 
