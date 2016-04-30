@@ -170,6 +170,11 @@ struct ion_client *gpsIONClient;
 EXPORT_SYMBOL(gpsIONClient);
 #endif /* defined(CONFIG_ION_OMAP) */
 
+/* Newer kernels no longer support __devinitdata */
+#if !defined(__devinitdata)
+#define __devinitdata
+#endif
+
 /* PRQA S 3207 2 */ /* ignore 'not used' warning */
 EXPORT_SYMBOL(PVRGetDisplayClassJTable);
 EXPORT_SYMBOL(PVRGetBufferClassJTable);

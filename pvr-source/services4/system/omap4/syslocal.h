@@ -84,7 +84,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35))
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 #include <plat/gpu.h>
+#endif
 #if !defined(PVR_NO_OMAP_TIMER)
 #define	PVR_OMAP_USE_DM_TIMER_API
 #include <plat/dmtimer.h>
@@ -216,7 +218,14 @@ PVRSRV_ERROR SysPMRuntimeUnregister(SYS_SPECIFIC_DATA *psSysSpecificData);
 
 PVRSRV_ERROR SysDvfsInitialize(SYS_SPECIFIC_DATA *psSysSpecificData);
 PVRSRV_ERROR SysDvfsDeinitialize(SYS_SPECIFIC_DATA *psSysSpecificData);
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 int pvr_access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf, int len, int write);
+#else
+static inline int pvr_access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf, int len, int write)
+{
+	return -1;
+}
+#endif
 
 #else /* defined(__linux__) */
 

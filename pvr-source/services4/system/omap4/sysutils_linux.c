@@ -719,6 +719,7 @@ SysDRMUnregisterPlugin(PVRSRV_DRM_PLUGIN *psDRMPlugin)
 }
 #endif
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 int pvr_access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf, int len, int write)
 {
 	struct gpu_platform_data *pdata;
@@ -727,6 +728,7 @@ int pvr_access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf
 		return -1;
 	return pdata->access_process_vm(tsk, addr, buf, len, write);
 }
+#endif
 
 IMG_VOID SysSGXIdleEntered(IMG_VOID)
 {
