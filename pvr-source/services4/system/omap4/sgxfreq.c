@@ -14,7 +14,11 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 #include <linux/opp.h>
+#else
+#include <linux/pm_opp.h>
+#endif
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 #include <plat/gpu.h>
 #endif
@@ -225,12 +229,20 @@ static const struct attribute *sgxfreq_attributes[] = {
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,8,0))
 static int set_volt_for_freq(unsigned long freq)
 {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 	struct opp *opp;
+#else
+	struct dev_pm_opp *opp;
+#endif
 	unsigned long volt = 0;
 	int ret;
 
 	if (sfd.gpu_reg) {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 		opp = opp_find_freq_exact(sfd.dev, freq, true);
+#else
+		opp = dev_pm_opp_find_freq_exact(sfd.dev, freq, true);
+#endif
 		if(IS_ERR(opp))
 		{
 			int r = PTR_ERR(opp);
@@ -239,7 +251,11 @@ static int set_volt_for_freq(unsigned long freq)
 			return -1;
 		}
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 		volt = opp_get_voltage(opp);
+#else
+		volt = dev_pm_opp_get_voltage(opp);
+#endif
 		if (!volt)
 		{
 			pr_err("sgxfreq: Could find volt corresponding to freq: %lu\n",
@@ -395,7 +411,11 @@ int sgxfreq_init(struct device *dev)
 {
 	int i, ret;
 	unsigned long freq;
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 	struct opp *opp;
+#else
+	struct dev_pm_opp *opp;
+#endif
 	struct timeval tv;
 
 	sfd.dev = dev;
@@ -421,7 +441,11 @@ int sgxfreq_init(struct device *dev)
 		return -EINVAL;
         }
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 	sfd.freq_cnt = opp_get_opp_count(dev);
+#else
+	sfd.freq_cnt = dev_pm_opp_get_opp_count(dev);
+#endif
 #endif
 	if (sfd.freq_cnt < 1) {
 		rcu_read_unlock();
@@ -438,8 +462,10 @@ int sgxfreq_init(struct device *dev)
 	for (i = 0; i < sfd.freq_cnt; i++) {
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 		opp = sfd.pdata->opp_find_freq_ceil(dev, &freq);
-#else
+#elif (LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0))
 		opp = opp_find_freq_ceil(dev, &freq);
+#else
+		opp = dev_pm_opp_find_freq_ceil(dev, &freq);
 #endif
 		if (IS_ERR_OR_NULL(opp)) {
 			rcu_read_unlock();
