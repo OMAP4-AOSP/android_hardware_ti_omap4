@@ -836,7 +836,11 @@ FreePagePool(IMG_VOID)
 static struct shrinker g_sShrinker;
 #endif
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,12,0))
 static int
+#else
+static unsigned long
+#endif
 ShrinkPagePool(struct shrinker *psShrinker, struct shrink_control *psShrinkControl)
 {
 	unsigned long uNumToScan = psShrinkControl->nr_to_scan;
@@ -2812,7 +2816,12 @@ static IMG_VOID LinuxMMCleanup_MemRecords_ForEachVa(DEBUG_MEM_ALLOC_REC *psCurre
 #if defined(PVR_LINUX_MEM_AREA_POOL_ALLOW_SHRINK)
 static struct shrinker g_sShrinker =
 {
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(3,12,0))
 	.shrink = ShrinkPagePool,
+#else
+	.count_objects = ShrinkPagePool,
+	.scan_objects = ShrinkPagePool,
+#endif
 	.seeks = DEFAULT_SEEKS
 };
 
