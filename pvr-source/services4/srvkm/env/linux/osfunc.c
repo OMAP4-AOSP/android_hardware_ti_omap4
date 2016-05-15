@@ -4404,6 +4404,10 @@ static inline size_t pvr_dmac_range_len(const void *pvStart, const void *pvEnd)
 }
 #endif
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0))
+extern void dmac_map_area(const void *, size_t, int);
+#endif
+
 static void pvr_dmac_inv_range(const void *pvStart, const void *pvEnd)
 {
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,34))

@@ -435,7 +435,11 @@ int sgxfreq_init(struct device *dev)
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3,8,0))
 	sfd.freq_cnt = sfd.pdata->opp_get_opp_count(dev);
 #else
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,4,0))
         ret = of_init_opp_table(dev);
+#else
+        ret = dev_pm_opp_of_add_table(dev);
+#endif
         if (ret) {
                 pr_err("sgxfreq: failed to init OPP table: %d\n", ret);
 		return -EINVAL;
