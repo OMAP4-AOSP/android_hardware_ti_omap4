@@ -37,15 +37,7 @@ OMAP_ENHANCEMENT_MULTIGPU := true
 BOARD_USE_TI_ENHANCED_DOMX := true
 BOARD_USE_TI_DUCATI_H264_PROFILE := true
 BOARD_USE_TI_DOMX_LOW_SECURE_HEAP := true
-
-ifneq (,$(strip $(wildcard \
-$(TARGET_KERNEL_SOURCE)/drivers/gpu/ion/ion_page_pool.c \
-$(TARGET_KERNEL_SOURCE)/drivers/staging/android/ion/ion_page_pool.c)))
-export BOARD_USE_TI_LIBION ?= false
-else
-export BOARD_USE_TI_LIBION ?= true
-endif
-
+BOARD_USE_TI_LIBION ?= true
 COMMON_GLOBAL_CFLAGS += -DENHANCED_DOMX
 ENHANCED_DOMX := true
 TARGET_SPECIFIC_HEADER_PATH += $(OMAP4_NEXT_FOLDER)/domx/omx_core/inc
