@@ -17,6 +17,9 @@
 
 ifeq ($(ANDROID_API_LP_OR_LATER),true)
 DEVICE_PACKAGE_OVERLAYS += hardware/ti/omap4/overlay
+
+PRODUCT_PACKAGES += \
+    e2fsck
 endif
 
 PRODUCT_PACKAGES += \
